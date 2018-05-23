@@ -189,15 +189,23 @@ import { combineEpics } from "redux-observable";
   /**
    * 处理epics
    * @param {any} model {namespace:"",actions:{},...}
-   * @param {any} epics {"user/fetch":f,...}
-   * @param {any} state {}
-   * @returns 数组
+   * @param {any} actionType 方法类型
+   * @param {any} epic 方法
+   * @returns actionObservable
    */
-  function hanldeEpics(model, epics, state) {
-    const epicsArr = Object.keys(epics).map(type => {
-      return handleEpic(model, type, epics[type]);
-    });
-    return epicsArr;
+  function hanldeEpics(model, actionType, epic = identify) {
+    return (action$, store) =>
+      epic(action$, store, actionType, res => {
+        const newType = `${model.namespace}${NAMESPACE_SEP}${res.type}`;
+        return {
+          ...res,
+          type: newType
+        }
+      })
+    // const epicsArr = Object.keys(epics).map(type => {
+    //   return handleEpic(model, type, epics[type]);
+    // });
+    // return epicsArr;
   }
 
   /**

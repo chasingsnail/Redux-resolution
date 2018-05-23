@@ -31,21 +31,23 @@ export default {
     }
   },
   epics: {
-    fetch(action, store, put) {
-      return tableAjax(action, store).map(response => {
-        return put({
-          type: "list",
-          payload: { date: "2018-4-24" }
-        });
-      });
-    },
-    remove(action, store, put) {
-      return tableAjax(action, store).map(response => {
-        return put({
-          type: "detail",
-          payload: { content: "hhhhhh" }
-        });
-      });
+    fetch(action$, store, actionType, put) {
+      return action$.ofType(actionType).mergeMap(action =>
+        tableAjax(action, store).map(response =>
+          put({
+            type: "list",
+            payload: { date: "我是刷新列表请求" }
+          })
+        )
+      );
     }
+    // remove(action, store, put) {
+    //   return tableAjax(action, store).map(response => {
+    //     return put({
+    //       type: "detail",
+    //       payload: { content: "hhhhhh" }
+    //     });
+    //   });
+    // }
   }
 };
